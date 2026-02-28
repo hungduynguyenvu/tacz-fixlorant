@@ -29,25 +29,18 @@ public abstract class ModernKineticGunScriptAPIMixin {
         return shooter != null && shooter.isSprinting();
     }
 
-    /**
-     * Lua-callable: api:getHorizontalSpeedSq()
-     * Great for "moving" tests in Lua without vector objects.
-     */
     @Unique
-    public double getHorizontalSpeedSq() {
-        if (shooter == null) return 0.0;
-        var v = shooter.getDeltaMovement();
-        return v.x * v.x + v.z * v.z;
+    public double getThePlayerMovement() {
+        double dx = shooter.getX() - shooter.xOld;
+        double dz = shooter.getZ() - shooter.zOld;
+        return (dx * dx + dz * dz);
     }
 
-    /**
-     * Lua-callable: api:isMoving(threshold)
-     * threshold is in blocks/tick (horizontal). Example threshold ~ 0.02
-     */
     @Unique
-    public boolean isMoving(double threshold) {
-        double t2 = threshold * threshold;
-        return getHorizontalSpeedSq() > t2;
+    public boolean isMoving() {
+        double dx = shooter.getX() - shooter.xOld;
+        double dz = shooter.getZ() - shooter.zOld;
+        return (dx * dx + dz * dz > 0.0004);
     }
 
     /**
