@@ -66,4 +66,9 @@ public abstract class ModernKineticGunScriptAPIMixin {
         boolean inWater = shooter.isInWater();
         return swimPose && !inWater;
     }
+
+    @Unique
+    public boolean isOnGround() {
+        return shooter != null && shooter.onGround();
+    }
 }
