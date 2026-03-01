@@ -1,7 +1,9 @@
 package me.hung.tacz_fixlorant.mixin;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
+import com.tacz.guns.util.HitboxHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,17 +32,12 @@ public abstract class ModernKineticGunScriptAPIMixin {
     }
 
     @Unique
-    public double getThePlayerMovement() {
-        double dx = shooter.getX() - shooter.xOld;
-        double dz = shooter.getZ() - shooter.zOld;
-        return (dx * dx + dz * dz);
-    }
-
-    @Unique
     public boolean isMoving() {
-        double dx = shooter.getX() - shooter.xOld;
-        double dz = shooter.getZ() - shooter.zOld;
-        return (dx * dx + dz * dz > 0.0004);
+        double distance = Math.abs(shooter.walkDist - shooter.walkDistO);
+        if (shooter instanceof Player player) {
+            distance = HitboxHelper.getPlayerVelocity(player).length();
+        }
+        return distance > 0.05f;
     }
 
     /**
